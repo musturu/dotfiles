@@ -10,13 +10,14 @@ require('misc')
 require('indentscope').setup()
 require('treesitter-config')
 require('miniclue')
+require('alpha-config')
 
 require("nvim-tree").setup({
   sort = {
     sorter = "case_sensitive",
   },
   view = {
-    width = 30,
+    width = 25,
   },
   renderer = {
     group_empty = true,

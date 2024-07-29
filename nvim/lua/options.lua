@@ -23,6 +23,7 @@ opt.smartcase = true
 opt.cursorline = true
 
 -- Appearance
+colorscheme = musthemer
 opt.termguicolors = true
 opt.background = "dark"
 opt.signcolumn = "yes"

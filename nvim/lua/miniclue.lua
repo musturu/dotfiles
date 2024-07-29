@@ -41,4 +41,12 @@ miniclue.setup({
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
   },
+	window = {
+      -- Floating window config
+      config = {},
+
+      -- Delay before showing clue window
+      delay = 300,
+	},
+
 })

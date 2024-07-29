@@ -1,6 +1,15 @@
 --plugins
 
 return {
+	-- Alpha (Dashboard)
+    {
+		'goolord/alpha-nvim',
+		lazy = true,
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		config = function ()
+			require'alpha'.setup(require'alpha.themes.startify'.config)
+		end
+    },
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
@@ -17,9 +26,15 @@ return {
             'nvim-tree/nvim-web-devicons',
         },
     },
+	--Mini.Clue
 	{
 		{ 'echasnovski/mini.clue', version = '*' },
 	},
+	{
+    	'windwp/nvim-autopairs',
+    	event = "InsertEnter",
+    	opts = {}
+	}
 	--ADD PLUGINS HERE
 }
 

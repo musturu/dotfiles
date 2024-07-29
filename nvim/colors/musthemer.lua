@@ -40,7 +40,8 @@ end
 function M.setup()
     -- Base colors
     set_hl('Normal', { fg = colors.fg, bg = colors.bg })
-    
+    set_hl('LuaParen', { fg = colors.fg, bg = colors.bg })
+
     -- Line numbers
     set_hl('LineNr', { fg = colors.gray, bg = colors.bg })
     set_hl('CursorLineNr', { fg = colors.bright, bg = colors.bg })
@@ -61,10 +62,9 @@ function M.setup()
     
     
     -- Syntax highlighting
-    set_hl('Comment', { fg = colors.dgreen, italic = true })
+    set_hl('Comment', { fg = colors.lmud, italic = true })
     set_hl('Constant', { fg = colors.lpurple, italic = true })
     set_hl('String', { fg = colors.lgreen })
-    set_hl('Identifier', { fg = colors.gray })
     set_hl('Function', { fg = colors.mmud })
     set_hl('Statement', { fg = colors.blue })
     set_hl('PreProc', { fg = colors.gray })
@@ -80,6 +80,19 @@ function M.setup()
     set_hl('@variable', { fg = colors.fg })
     set_hl('@variable.builtin', { fg = colors.lpurple })
     set_hl('@variable.parameter', { fg = colors.brighter })   
+	-- Plugins
+	-- NVIMTREE
+	set_hl('NvimTreeFolderIcon', { fg = colors.red })   
+	set_hl('Directory', { fg = colors.bright })  
+	--MINI.CLUE
+	set_hl('MiniClueBorder', {fg = colors.brighter, bg = colors.bg }) -- window border.
+	set_hl('MiniClueDescGroup', { fg = colors.bright, bg = colors.bg }) -- group description in clue window.
+	set_hl('MiniClueDescSingle', {fg = colors.fg , bg = colors.bg }) -- single target description in clue window.
+	set_hl('MiniClueNextKey', {fg = colors.lpurple , bg = colors.bg }) -- next key label in clue window.
+	set_hl('MiniClueNextKeyWithPostkeys', {fg = colors.red , bg = colors.bg }) -- next key label with postkeys in clue window.
+	set_hl('MiniClueSeparator', {fg = colors.bred, bg = colors.bg }) -- separator in clue window.
+	set_hl('MiniClueTitle', {fg = colors.mmud, bg = colors.bg  }) -- window title.
+
 end
 
 M.setup()
