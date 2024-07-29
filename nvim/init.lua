@@ -13,6 +13,7 @@ require('alpha-config')
 require('lsp-config')
 require('mason-lsp-config')
 require('telescope-config')
+require('lualine-config')
 require("nvim-tree").setup({
   sort = {
     sorter = "case_sensitive",

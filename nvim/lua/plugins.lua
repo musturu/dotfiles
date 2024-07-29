@@ -1,6 +1,11 @@
 --plugins
 
 return {
+	--LUALINE
+	{
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
+    },
 	-- Telescope (Fuzzy Finder)
     {
         'nvim-telescope/telescope.nvim',
