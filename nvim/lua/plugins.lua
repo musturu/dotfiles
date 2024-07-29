@@ -1,6 +1,14 @@
 --plugins
 
 return {
+	-- Telescope (Fuzzy Finder)
+    {
+        'nvim-telescope/telescope.nvim',
+        lazy = true,
+        dependencies = {
+            {'nvim-lua/plenary.nvim'},
+        }
+    },
 	-- Alpha (Dashboard)
     {
 		'goolord/alpha-nvim',
@@ -34,7 +42,30 @@ return {
     	'windwp/nvim-autopairs',
     	event = "InsertEnter",
     	opts = {}
-	}
+	},
+	--LSP, CMP, SNIP
+	{
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v3.x',
+        dependencies = {
+            -- LSP Support
+            {'neovim/nvim-lspconfig'},             -- Required
+            {'williamboman/mason.nvim'},           -- Optional
+            {'williamboman/mason-lspconfig.nvim'}, -- Optional
+
+            -- Autocompletion
+            {'hrsh7th/nvim-cmp'},         -- Required
+            {'hrsh7th/cmp-nvim-lsp'},     -- Required
+            {'hrsh7th/cmp-buffer'},       -- Optional
+            {'hrsh7th/cmp-path'},         -- Optional
+            {'saadparwaiz1/cmp_luasnip'}, -- Optional
+            {'hrsh7th/cmp-nvim-lua'},     -- Optional
+
+            -- Snippets
+            {'L3MON4D3/LuaSnip'},             -- Required
+            {'rafamadriz/friendly-snippets'}, -- Optional
+        }
+    },
 	--ADD PLUGINS HERE
 }
 
