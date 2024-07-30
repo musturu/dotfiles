@@ -1,6 +1,20 @@
---plugins
+--plugin
 
 return {
+
+  	-- Bufferline
+    {
+        'akinsho/bufferline.nvim',
+        dependencies = 'nvim-tree/nvim-web-devicons'
+    },
+	--HOP
+	{
+    	'smoka7/hop.nvim',
+    	version = "*",
+    	opts = {
+        	keys = 'etovxqpdygfblzhckisuran'
+    	}
+	},
 	--LUALINE
 	{
         'nvim-lualine/lualine.nvim',
@@ -59,6 +73,8 @@ return {
             {'williamboman/mason-lspconfig.nvim'}, -- Optional
 
             -- Autocompletion
+			{ 'onsails/lspkind-nvim'},
+			{'ray-x/lsp_signature.nvim'},
             {'hrsh7th/nvim-cmp'},         -- Required
             {'hrsh7th/cmp-nvim-lsp'},     -- Required
             {'hrsh7th/cmp-buffer'},       -- Optional

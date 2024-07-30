@@ -77,7 +77,7 @@ function M.setup()
 	set_hl('Delimiter' , {fg = colors.bright })
 	-- Variables
     set_hl('Identifier', { fg = colors.lgray })
-    set_hl('@variable', { fg = colors.fg })
+    set_hl('@variable', { fg = colors.bright })
     set_hl('@variable.builtin', { fg = colors.lpurple })
     set_hl('@variable.parameter', { fg = colors.brighter })   
 	-- Plugins

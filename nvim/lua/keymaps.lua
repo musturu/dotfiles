@@ -63,3 +63,41 @@ keymap.set("n", "<leader>sr", "<cmd>Telescope registers<cr>", { desc = "Register
 keymap.set("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "Keymaps" })
 keymap.set("n", "<leader>sc", "<cmd>Telescope commands<cr>", { desc = "Commands" })
 
+-- Buffers
+keymap.set("n", "<leader><Tab>", "<nop>", { desc = "Buffers" })
+
+-- Switch to next buffer
+keymap.set("n", "<leader><Tab><Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+
+-- Switch to previous buffer
+keymap.set("n", "<leader><Tab>p", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous Buffer" })
+
+-- Go to buffer in position...
+keymap.set("n", "<leader><Tab>1", "<cmd>BufferLineGoToBuffer 1<cr>", { desc = "Buffer 1" })
+keymap.set("n", "<leader><Tab>2", "<cmd>BufferLineGoToBuffer 2<cr>", { desc = "Buffer 2" })
+keymap.set("n", "<leader><Tab>3", "<cmd>BufferLineGoToBuffer 3<cr>", { desc = "Buffer 3" })
+keymap.set("n", "<leader><Tab>4", "<cmd>BufferLineGoToBuffer 4<cr>", { desc = "Buffer 4" })
+keymap.set("n", "<leader><Tab>5", "<cmd>BufferLineGoToBuffer 5<cr>", { desc = "Buffer 5" })
+keymap.set("n", "<leader><Tab>6", "<cmd>BufferLineGoToBuffer 6<cr>", { desc = "Buffer 6" })
+keymap.set("n", "<leader><Tab>7", "<cmd>BufferLineGoToBuffer 7<cr>", { desc = "Buffer 7" })
+keymap.set("n", "<leader><Tab>8", "<cmd>BufferLineGoToBuffer 8<cr>", { desc = "Buffer 8" })
+keymap.set("n", "<leader><Tab>9", "<cmd>BufferLineGoToBuffer 9<cr>", { desc = "Buffer 9" })
+keymap.set("n", "<leader><Tab>$", "<cmd>BufferLineGoToBuffer -1<cr>", { desc = "Last Buffer" })
+
+-- Move buffer to position
+keymap.set("n", "<leader><Tab>m", "<nop>", { desc = "Move Buffer" })
+keymap.set("n", "<leader><Tab>m1", "<cmd>BufferLineMoveTo 1<cr>", { desc = "Move to Position 1" })
+keymap.set("n", "<leader><Tab>m2", "<cmd>BufferLineMoveTo 2<cr>", { desc = "Move to Position 2" })
+keymap.set("n", "<leader><Tab>m3", "<cmd>BufferLineMoveTo 3<cr>", { desc = "Move to Position 3" })
+keymap.set("n", "<leader><Tab>m4", "<cmd>BufferLineMoveTo 4<cr>", { desc = "Move to Position 4" })
+keymap.set("n", "<leader><Tab>m5", "<cmd>BufferLineMoveTo 5<cr>", { desc = "Move to Position 5" })
+
+-- Custom function to change buffer
+local function change_buffer()
+    local buffer_number = tonumber(vim.fn.input("Buffer number: "))
+    if buffer_number then
+        vim.cmd('BufferLineGoToBuffer ' .. buffer_number)
+    end
+end
+
+keymap.set("n", "<leader><Tab>g", change_buffer, { desc = "Go to Buffer" })
