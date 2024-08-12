@@ -2,16 +2,19 @@ local wezterm = require 'wezterm'
 
 local config = {}
 
+
+
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
--- Color scheme
+config.enable_wayland = true
+
 
 -- Font configuration
-config.font = wezterm.font('JetBrains Mono')
+config.font = wezterm.font('IBM Plex Mono')
 config.font_size = 11.5
 
 -- Window configuration
@@ -74,13 +77,59 @@ config.hyperlink_rules = {
   {
     regex = "\\b\\w+://(?:[\\w.-]+)\\.[a-z]{2,15}\\S*\\b",
     format = "$0",
+  }
+}
+-- Function to get the GTK theme mode
+local function get_gtk_theme_mode()
+    local gtk_theme = os.getenv("GTK_THEME")
+
+    if gtk_theme then
+        -- Check if the theme contains ":dark" or ":light"
+        if string.match(gtk_theme:lower(), ":dark") then
+            return "dark"
+        elseif string.match(gtk_theme:lower(), ":light") then
+            return "light"
+        else
+            -- If no mode specified, assume it's based on the theme name
+            if string.match(gtk_theme:lower(), "dark") then
+                return "dark"
+            elseif string.match(gtk_theme:lower(), "light") then
+                return "light"
+            end
+        end
+    end
+
+    -- Default to dark if we couldn't determine the theme
+    wezterm.log_info("Defaulting to dark theme")
+    return "dark"
+end
+
+local function get_colorscheme()
+    local mode = get_gtk_theme_mode()
+    if string.match(mode, "dark") then
+        return  "Catch Me If You Can (terminal.sexy)"-- Replace with your preferred dark theme
+    else
+        return "lightmust" -- Replace with your preferred light theme
+    end
+end
+
+wezterm.log_info(get_colorscheme())
+config.color_scheme = get_colorscheme()
+wezterm.log_info(config.color_scheme)
+
+
+config.color_schemes = {
+  ['lightmust'] = {
+    	background = '#eeeff5',
+		foreground = '#000406',
+		cursor_bg = '#6c56e8',
+		selection_bg = '#faf743',
+		scrollbar_thumb = '6c56e8'
+
   },
-  -- Make username/project paths clickable. This implies paths like the following are clickable:
-  --  jonathanschimpf/wezterm
-  {
-    regex = [[["]?([\w\d]{1}[-\w\d]+)(/){1}([-\w\d\.]+)["]?]],
-    format = "https://github.com/$1/$3",
-  },
+	['byp'] = {
+		background = 'blue';
+	}
 }
 
 return config-- Pull in the wezterm API

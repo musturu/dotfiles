@@ -25,31 +25,31 @@ function f
 end
 
 # Set custom prompt
-function fish_prompt
-    set_color red
-    echo -n '┬── '
-    set_color yellow
-    echo -n $USER
-    set_color normal
-    echo -n ' at '
-    echo -n $hostname
-    echo -n ' in '
-    set_color purple
-    echo -n (prompt_pwd)/
-    set_color red
-    echo -n " ──[$(date +"%H:%M:%S %6N ms")]"
-    set_color red
-	echo -n \n
-    echo -n '╰─❯' 
-    set_color normal
-end
-
+#function fish_prompt
+#    set_color red
+#    echo -n '┬── '
+#    set_color yellow
+#    echo -n $USER
+#    set_color normal
+#    echo -n ' at '
+#    echo -n $hostname
+#    echo -n ' in '
+#    set_color purple
+#    echo -n (prompt_pwd)/
+#    set_color red
+#    echo -n " ──[$(date +"%H:%M:%S %6N ms")]"
+#    set_color red
+#	echo -n \n
+#    echo -n '╰─❯' 
+#    set_color normal
+#end
+#
 # Enable autosuggestions (if not enabled by default)
 set -g fish_autosuggestion_enabled 1
 
 # Set color scheme
-set -g fish_color_command blue
-set -g fish_color_param cyan
+set -g fish_color_command green
+set -g fish_color_param yellow
 set -g fish_color_error red
 set -g fish_color_normal normal
 
@@ -84,6 +84,16 @@ end
 if test -f $HOME/.config/fish/local.fish
     source $HOME/.config/fish/local.fish
 end
+
+set -gx XDG_CURRENT_DESKTOP Hyprland
+set -gx XDG_SESSION_TYPE wayland
+set -gx XDG_SESSION_DESKTOP Hyprland
+set -gx QT_QPA_PLATFORM "wayland;xcb"
+set -gx GDK_BACKEND "wayland,x11"
+set -gx SDL_VIDEODRIVER wayland
+set -gx _JAVA_AWT_WM_NONREPEATING 1
+set -gx CLUTTER_BACKEND wayland
+set -gx MOZ_ENABLE_WAYLAND 1
 
 if status is-interactive
     # Commands to run in interactive sessions can go here

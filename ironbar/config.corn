@@ -1,0 +1,140 @@
+
+let {
+
+	$scriptdir = "/home/mustur/.config/ironbar/scripts/"
+	
+	$launcher = {
+        type = "launcher"
+        favorites = ["firefox" "wezterm"]
+        show_names = false
+        show_icons = true
+		icon_size = 24
+    }
+	
+
+	$music = {
+	 
+	 name = "musica"
+	  type = "music"
+	  player_type = "mpris"
+	  format = "🎘" 
+	  icons.play = ""
+	  icons.pause = ""
+	  show_status_icon = false
+	}
+
+	$network = { type = "network_manager" }
+
+
+    $tray = { type = "tray" }
+
+    $clock = { type = "clock" format = "%H\n%M"}
+
+
+
+
+    $volume = {
+        type = "volume"
+        format = "{icon}"
+        max_volume = 100
+        icons.volume_high = "󰕾"
+        icons.volume_medium = "󰖀"
+        icons.volume_low = "󰕿"
+        icons.muted = "󰝟"
+		icon_size = 24
+    }
+
+
+    // -- begin custom --
+    $button = { type = "button" name="power-btn" label = "⏻" on_click = "popup:toggle" }
+    $theme_button = { type = "button" name="th_btn" label = "👁" on_click = "!$scriptdir/change_theme.sh"}
+    $ws_button = { type = "button" name="btn" label = "{{30000: $scriptdir/weather_icon.sh}}" on_click = "popup:toggle" tooltip = "{{300000:  $scriptdir/weather.sh}}"}
+
+    $pwr_popup = {
+        type = "box"
+        orientation = "horizontal"
+        widgets = [
+            {
+                type = "box"
+				orientation = "horizontal"
+                widgets = [
+                    { type = "button" class="power-btn" label = "<span font-size='20pt'>⛌</span>" on_click = "popup:toggle" tooltip = "close Menu" }
+                    { type = "button" class="power-btn" label = "<span font-size='20pt'>⏾</span>" on_click = "!systemctl suspend" tooltip = "Suspend" }
+                    { type = "button" class="power-btn" label = "<span font-size='20pt'>⏻</span>" on_click = "!shutdown now" tooltip = "Power Off" }
+                    { type = "button" class="power-btn" label = "<span font-size='20pt'>⭯</span>" on_click = "!reboot" tooltip = "Restart" }
+                ]
+            }
+        ]
+    }
+
+    $power_menu = {
+        type = "custom"
+        class = "power-menu"
+
+        bar = [ $button ]
+        popup = [ $pwr_popup ]
+
+    }
+
+    $wesa_popup = {
+		name = "wesa_popup"
+        type = "box"
+        orientation = "horizontal"
+        widgets = [
+            {
+                type = "box"
+				orientation = "vertical"
+                widgets = [
+                    { type = "button" class="power-btn" label = "<span font-size='9pt'>{{300000: $scriptdir/wtrline.sh}}</span>" on_click = "popup:toggle" }
+                ]
+            }
+        ]
+    }
+
+    $wesa_ripoto = {
+		name = "wesa_ripoto"
+        type = "custom"
+        class = "weather"
+
+
+        bar = [ $ws_button ]
+        popup = [ $wesa_popup ]
+
+    }
+
+	$theme_widget = {
+		type = "custom"
+		class = "themer"
+		bar = [ $theme_button ]
+	}
+    // -- end custom --
+
+		
+	$left = [$wesa_ripoto $tray $volume $music]
+	$center = [$launcher ]
+    $right = [ $theme_widget $clock $power_menu ]
+}
+in {
+	monitors.eDP-1 = [
+
+		{
+			name = "bar-1"
+			anchor_to_edges = true
+			position = "left"
+			//icon_theme = "Paper"
+			height = 12
+
+			start = $left
+			center = $center
+			end = $right
+		}
+	
+		// {
+		// 	name = "bar-2"
+		// 	position = "top"
+		// 	height = 1
+		// 	exclusive_zone = true
+		// 	center = [$music]
+		// }
+		//
+]}
