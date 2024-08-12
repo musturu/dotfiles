@@ -101,3 +101,18 @@ local function change_buffer()
 end
 
 keymap.set("n", "<leader><Tab>g", change_buffer, { desc = "Go to Buffer" })
+
+-- Function to save all modified buffers
+local function save_all_modified_buffers()
+    for i = 1, vim.fn.bufnr('$') do
+        if vim.bo[i].modified then
+            vim.api.nvim_buf_call(i, function()
+                vim.cmd('write')
+            end)
+        end
+    end
+    vim.notify("All modified buffers saved", vim.log.levels.INFO)
+end
+
+-- Keymap to trigger the function
+keymap.set("n", "<leader><Tab>w", save_all_modified_buffers, { desc = "Save all modified buffers" })

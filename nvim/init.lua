@@ -1,6 +1,7 @@
--- init.lua
+-- init.lua 
 
-vim.cmd('colorscheme musthemer')
+vim.cmd('colorscheme lightmust')
+
 
 require('keymaps')
 require('options')

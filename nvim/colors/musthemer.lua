@@ -45,22 +45,22 @@ function M.setup()
     -- Line numbers
     set_hl('LineNr', { fg = colors.gray, bg = colors.bg })
     set_hl('CursorLineNr', { fg = colors.bright, bg = colors.bg })
-    
+
     -- Cursor line
     set_hl('CursorLine', { bg = colors.lbg })
-    
+
     -- Status line`
     set_hl('StatusLine', { fg = colors.fg, bg = colors.lbg })
     set_hl('StatusLineNC', { fg = colors.fg, bg = colors.bred })
-    
+
     -- Search
     set_hl('Search', { fg = colors.bright, bg = colors.red })
     set_hl('IncSearch', { fg = colors.bright, bg = colors.bred })
-    
+
     -- Visual selection
     set_hl('Visual', { bg = colors.gray })
-    
-    
+
+
     -- Syntax highlighting
     set_hl('Comment', { fg = colors.lmud, italic = true })
     set_hl('Constant', { fg = colors.lpurple, italic = true })
@@ -79,11 +79,11 @@ function M.setup()
     set_hl('Identifier', { fg = colors.lgray })
     set_hl('@variable', { fg = colors.bright })
     set_hl('@variable.builtin', { fg = colors.lpurple })
-    set_hl('@variable.parameter', { fg = colors.brighter })   
+    set_hl('@variable.parameter', { fg = colors.brighter })
 	-- Plugins
 	-- NVIMTREE
-	set_hl('NvimTreeFolderIcon', { fg = colors.red })   
-	set_hl('Directory', { fg = colors.bright })  
+	set_hl('NvimTreeFolderIcon', { fg = colors.red })
+	set_hl('Directory', { fg = colors.bright })
 	--MINI.CLUE
 	set_hl('MiniClueBorder', {fg = colors.brighter, bg = colors.bg }) -- window border.
 	set_hl('MiniClueDescGroup', { fg = colors.bright, bg = colors.bg }) -- group description in clue window.
@@ -92,6 +92,16 @@ function M.setup()
 	set_hl('MiniClueNextKeyWithPostkeys', {fg = colors.red , bg = colors.bg }) -- next key label with postkeys in clue window.
 	set_hl('MiniClueSeparator', {fg = colors.bred, bg = colors.bg }) -- separator in clue window.
 	set_hl('MiniClueTitle', {fg = colors.mmud, bg = colors.bg  }) -- window title.
+
+
+	set_hl("Pmenu", {fg = colors.fg, bg = colors.lbg})
+	set_hl("PmenuKind", { bg = colors.blue, fg = colors.brighter })
+	set_hl("PmenuSBar", { bg = colors.bg, fg = colors.brighter })
+	set_hl("PmenuSel", { bg = colors.bg, fg = colors.brighter })
+	set_hl("PmenuThumb", { bg = colors.dpurple, fg = colors.brighter })
+	set_hl("CmpItemAbbr", { fg = colors.fg, bg = colors.bg })
+	set_hl("NormalFloat", { fg = colors.fg, bg = colors.bg })
+	set_hl("FloatBorder", { fg = colors.brighter, bg = colors.bg })
 
 end
 
