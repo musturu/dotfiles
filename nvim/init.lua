@@ -1,8 +1,5 @@
 -- init.lua 
 
-vim.cmd('colorscheme lightmust')
-
-
 require('keymaps')
 require('options')
 require('lazy-config')
@@ -31,4 +28,5 @@ require("nvim-tree").setup({
     dotfiles = true,
   },
 })
-
+require("flowconfig")
+vim.cmd "colorscheme flow"

@@ -2,12 +2,13 @@
 
 return {
 	{
-    	"scottmckendry/cyberdream.nvim",
-    	lazy = false,
-    	priority = 1000,
+  		"0xstepit/flow.nvim",
+  		lazy = false,
+  		priority = 1000,
+  		opts = {},
 	},
-  	-- Bufferline
-    {
+  	-- bufferline
+	{
         'akinsho/bufferline.nvim',
         dependencies = 'nvim-tree/nvim-web-devicons'
     },

@@ -24,34 +24,34 @@ opt.cursorline = true
 
 -- Appearance
 -- Function to get the GTK theme mode
-local function get_gtk_theme_mode()
-    local gtk_theme = os.getenv("GTK_THEME")
-    if gtk_theme then
-        -- Check if the theme contains ":dark" or ":light"
-        if string.match(gtk_theme, ":dark") then
-            return "dark"
-        elseif string.match(gtk_theme, ":light") then
-            return "light"
-        end
-    end
-    -- Default to dark if GTK_THEME is not set or doesn't specify mode
-    return "dark"
-end
-
--- Set the colorscheme based on the GTK theme mode
-local function set_colorscheme()
-    local mode = get_gtk_theme_mode()
-    if mode == "dark" then
-        vim.cmd("colorscheme musthemer") -- Replace with your preferred dark theme
-    else
-        vim.cmd("colorscheme lightmust") -- Replace with your preferred light theme
-    end
-end
-
--- Call the function to set the colorscheme
-set_colorscheme()
-opt.termguicolors = true
-opt.background = get_gtk_theme_mode()
+-- local function get_gtk_theme_mode()
+--     local gtk_theme = os.getenv("GTK_THEME")
+--     if gtk_theme then
+--         -- Check if the theme contains ":dark" or ":light"
+--         if string.match(gtk_theme, ":dark") then
+--             return "dark"
+--         elseif string.match(gtk_theme, ":light") then
+--             return "light"
+--         end
+--     end
+--     -- Default to dark if GTK_THEME is not set or doesn't specify mode
+--     return "dark"
+-- end
+--
+-- -- Set the colorscheme based on the GTK theme mode
+-- local function set_colorscheme()
+--     local mode = get_gtk_theme_mode()
+--     if mode == "dark" then
+--         vim.cmd("colorscheme musthemer") -- Replace with your preferred dark theme
+--     else
+--         vim.cmd("colorscheme lightmust") -- Replace with your preferred light theme
+--     end
+-- end
+--
+-- -- Call the function to set the colorscheme
+-- set_colorscheme()
+-- opt.termguicolors = true
+-- opt.background = get_gtk_theme_mode()
 opt.signcolumn = "yes"
 
 -- Backspace
