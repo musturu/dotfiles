@@ -6,32 +6,32 @@ local keymap = vim.keymap
 vim.g.mapleader = " "
 
 -- General keymaps
-keymap.set("i", "jk", "<ESC>") -- Exit insert mode with 'jk'
-keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights"}) -- Clear search highlights
-keymap.set("n", "x", '"_x') -- Delete single character without copying into register
+keymap.set("i", "jk", "<ESC>")                                                  -- Exit insert mode with 'jk'
+keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" }) -- Clear search highlights
+keymap.set("n", "x", '"_x')                                                     -- Delete single character without copying into register
 
 -- Window management
 keymap.set('n', '<leader>w', '<nop>', { desc = "Window Management" })
-keymap.set("n", "<leader>wv", "<C-w>v", {desc = "Split Vertical"}) -- Split window vertically
-keymap.set("n", "<leader>ww", "<C-w>w", {desc = "Next Window"}) -- Split window vertically
-keymap.set("n", "<leader>w<Tab>", "<C-w>w", {desc = "Next Window"}) -- Split window vertically
-keymap.set("n", "<leader>wh", "<C-w>s", {desc = "Split Horizontal"}) -- Split window horizontally
-keymap.set("n", "<leader>we", "<C-w>=", {desc = "Equalize widht & height"}) -- Split window vertically
-keymap.set("n", "<leader>wx", ":close<CR>", {desc = "Close current window"}) -- Split window horizontally
+keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split Vertical" })         -- Split window vertically
+keymap.set("n", "<leader>ww", "<C-w>w", { desc = "Next Window" })            -- Split window vertically
+keymap.set("n", "<leader>w<Tab>", "<C-w>w", { desc = "Next Window" })        -- Split window vertically
+keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split Horizontal" })       -- Split window horizontally
+keymap.set("n", "<leader>we", "<C-w>=", { desc = "Equalize widht & height" }) -- Split window vertically
+keymap.set("n", "<leader>wx", ":close<CR>", { desc = "Close current window" }) -- Split window horizontally
 
 
 -- Tab management
 vim.keymap.set('n', '<leader>t', '<nop>', { desc = "Tab management" })
 vim.keymap.set('n', '<leader>to', ':tabnew<CR>', { desc = "Open new tab" })
 vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { desc = "Close new tab" })
-keymap.set("n", "<leader>t<Tab>", ":tabn<CR>", { desc = "Go to next tavb"}) --  Go to next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "Go to prev tab"}) --  Go to previous tab
+keymap.set("n", "<leader>t<Tab>", ":tabn<CR>", { desc = "Go to next tavb" }) --  Go to next tab
+keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "Go to prev tab" })     --  Go to previous tab
 
 -- Plugin-specific keymaps (you can add these later as you install plugins)
 -- Example for nvim-tree
-keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "TreeExplore"})
-keymap.set("n", "<leader>p", ":Lazy<CR>", { desc = "PackageManager"})
-keymap.set("n", "<leader>a", ":Alpha<CR>", { desc = "Main Menu"})
+keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "TreeExplore" })
+keymap.set("n", "<leader>p", ":Lazy<CR>", { desc = "PackageManager" })
+keymap.set("n", "<leader>a", ":Alpha<CR>", { desc = "Main Menu" })
 
 -- Mason
 keymap.set("n", "<leader>m", "<cmd>Mason<cr>", { desc = "Mason UI for Lsp" })
@@ -94,25 +94,78 @@ keymap.set("n", "<leader><Tab>m5", "<cmd>BufferLineMoveTo 5<cr>", { desc = "Move
 
 -- Custom function to change buffer
 local function change_buffer()
-    local buffer_number = tonumber(vim.fn.input("Buffer number: "))
-    if buffer_number then
-        vim.cmd('BufferLineGoToBuffer ' .. buffer_number)
-    end
+	local buffer_number = tonumber(vim.fn.input("Buffer number: "))
+	if buffer_number then
+		vim.cmd('BufferLineGoToBuffer ' .. buffer_number)
+	end
 end
 
 keymap.set("n", "<leader><Tab>g", change_buffer, { desc = "Go to Buffer" })
 
--- Function to save all modified buffers
+
+
+
+	
+-- Improved function to save all modified buffers
 local function save_all_modified_buffers()
+    local saved_count = 0
     for i = 1, vim.fn.bufnr('$') do
-        if vim.bo[i].modified then
-            vim.api.nvim_buf_call(i, function()
-                vim.cmd('write')
+        if vim.api.nvim_buf_is_valid(i) and vim.bo[i].modified and vim.bo[i].buftype == '' then
+            local success, err = pcall(function()
+                vim.api.nvim_buf_call(i, function()
+                    vim.cmd('write')
+                end)
             end)
+            if success then
+                saved_count = saved_count + 1
+            else
+                vim.notify("Failed to save buffer " .. i .. ": " .. err, vim.log.levels.ERROR)
+            end
         end
     end
-    vim.notify("All modified buffers saved", vim.log.levels.INFO)
+    vim.notify(saved_count .. " modified buffer(s) saved", vim.log.levels.INFO)
 end
 
--- Keymap to trigger the function
+-- Function to close selected buffer [1-9]
+local function close_selected_buffer(num)
+    local bufnr = vim.fn.bufnr(tostring(num))
+    if bufnr ~= -1 then
+        vim.api.nvim_buf_delete(bufnr, { force = false })
+        vim.notify("Closed buffer " .. num, vim.log.levels.INFO)
+    else
+        vim.notify("Buffer " .. num .. " not found", vim.log.levels.WARN)
+    end
+end
+
+-- Function to close current buffer
+local function close_current_buffer()
+    local current_buf = vim.api.nvim_get_current_buf()
+    local next_buf = vim.fn.bufnr('#')
+    
+    if next_buf ~= -1 and vim.api.nvim_buf_is_valid(next_buf) then
+        vim.api.nvim_set_current_buf(next_buf)
+    else
+        vim.cmd('Alpha')
+    end
+    
+    vim.api.nvim_buf_delete(current_buf, { force = false })
+    vim.notify("Closed current buffer", vim.log.levels.INFO)
+end
+
+-- Keymaps
 keymap.set("n", "<leader><Tab>w", save_all_modified_buffers, { desc = "Save all modified buffers" })
+
+for i = 1, 9 do
+    keymap.set("n", "<leader><Tab>x" .. i, function() close_selected_buffer(i) end, { desc = "Close buffer " .. i })
+end
+
+keymap.set("n", "<leader><Tab>Q", "<cmd>BufferLineCloseOthers<cr>", { desc = "Close all buffers except current" })
+keymap.set("n", "<leader><Tab>q", close_current_buffer, { desc = "Close current buffer" })
+
+-- Remap :q to close current buffer
+vim.api.nvim_create_user_command('Q', function()
+    close_current_buffer()
+end, {})
+
+-- Optional: completely override :q (use with caution)
+-- vim.cmd('cabbrev q Q')
