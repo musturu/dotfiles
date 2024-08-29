@@ -28,5 +28,5 @@ require("nvim-tree").setup({
     dotfiles = true,
   },
 })
-require("flowconfig")
-vim.cmd "colorscheme flow"
+require'colorizer'.setup()
+vim.cmd "colorscheme mstrtheme2"
