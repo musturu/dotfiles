@@ -21,6 +21,7 @@ return {
     }
 
     -- toggle keymap (change to your preferred key)
+    vim.keymap.set('n', '<Tab>o', '<cmd>AerialOpen<CR>', { silent = true })
     vim.keymap.set('n', '<Leader>o', '<cmd>AerialToggle!<CR>', { silent = true })
   end,
 }
