@@ -1,171 +1,55 @@
--- ~/.config/nvim/lua/config/keymaps.lua
+-- [[ Basic Keymaps ]]
+--  See `:help vim.keymap.set()`
 
-local keymap = vim.keymap
+-- Clear highlights on search when pressing <Esc> in normal mode
+--  See `:help hlsearch`
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Set leader key to space
-vim.g.mapleader = " "
+-- Diagnostic keymaps
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- General keymaps
-keymap.set("i", "jk", "<ESC>")                                                  -- Exit insert mode with 'jk'
-keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" }) -- Clear search highlights
-keymap.set("n", "x", '"_x')                                                     -- Delete single character without copying into register
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+--
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- Window management
-keymap.set('n', '<leader>w', '<nop>', { desc = "Window Management" })
-keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split Vertical" })         -- Split window vertically
-keymap.set("n", "<leader>ww", "<C-w>w", { desc = "Next Window" })            -- Split window vertically
-keymap.set("n", "<leader>w<Tab>", "<C-w>w", { desc = "Next Window" })        -- Split window vertically
-keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split Horizontal" })       -- Split window horizontally
-keymap.set("n", "<leader>we", "<C-w>=", { desc = "Equalize widht & height" }) -- Split window vertically
-keymap.set("n", "<leader>wx", ":close<CR>", { desc = "Close current window" }) -- Split window horizontally
+-- TIP: Disable arrow keys in normal mode
+-- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+-- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+-- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+-- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
+-- Keybinds to make split navigation easier.
+--  Use CTRL+<hjkl> to switch between windows
+--
+--  See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<Tab><left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<Tab><right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<Tab><down>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<Tab><up>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<Tab><Tab>', '<C-w><C-w>', { desc = 'go to next window' })
 
--- Tab management
-vim.keymap.set('n', '<leader>t', '<nop>', { desc = "Tab management" })
-vim.keymap.set('n', '<leader>to', ':tabnew<CR>', { desc = "Open new tab" })
-vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { desc = "Close new tab" })
-keymap.set("n", "<leader>t<Tab>", ":tabn<CR>", { desc = "Go to next tavb" }) --  Go to next tab
-keymap.set("n", "<leader>tp", ":tabp<CR>", { desc = "Go to prev tab" })     --  Go to previous tab
+-- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
+-- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
+-- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
+-- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
+-- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
--- Plugin-specific keymaps (you can add these later as you install plugins)
--- Example for nvim-tree
-keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "TreeExplore" })
-keymap.set("n", "<leader>p", ":Lazy<CR>", { desc = "PackageManager" })
-keymap.set("n", "<leader>a", ":Alpha<CR>", { desc = "Main Menu" })
+-- [[ Basic Autocommands ]]
+--  See `:help lua-guide-autocommands`
 
--- Mason
-keymap.set("n", "<leader>m", "<cmd>Mason<cr>", { desc = "Mason UI for Lsp" })
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.hl.on_yank()`
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.hl.on_yank()
+  end,
+})
 
--- Reformat Code
-keymap.set("n", "<leader>r", "<cmd>lua vim.lsp.buf.format{async=true}<cr>", { desc = "Reformat Code" })
-
--- LSP actions
-keymap.set("n", "<leader>l", "<nop>", { desc = "LSP actions" })
-keymap.set("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action" })
-keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
-keymap.set("n", "<leader>ll", "<cmd>lua vim.lsp.codelens.run()<cr>", { desc = "CodeLens Action" })
-keymap.set("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
-keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Document Symbols" })
-keymap.set("n", "<leader>lS", "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", { desc = "Workspace Symbols" })
-
--- File Search
-keymap.set("n", "<leader>f", "<nop>", { desc = "File Search" })
-keymap.set("n", "<leader>fc", "<cmd>Telescope colorscheme<cr>", { desc = "Colorscheme" })
-keymap.set("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Find files" })
-keymap.set("n", "<leader>ft", "<cmd>Telescope live_grep<cr>", { desc = "Find Text Pattern In All Files" })
-keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Open Recent File" })
-
--- Search
-keymap.set("n", "<leader>s", "<nop>", { desc = "Search" })
-keymap.set("n", "<leader>sh", "<cmd>Telescope help_tags<cr>", { desc = "Find Help" })
-keymap.set("n", "<leader>sm", "<cmd>Telescope man_pages<cr>", { desc = "Man Pages" })
-keymap.set("n", "<leader>sr", "<cmd>Telescope registers<cr>", { desc = "Registers" })
-keymap.set("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "Keymaps" })
-keymap.set("n", "<leader>sc", "<cmd>Telescope commands<cr>", { desc = "Commands" })
-
--- Buffers
-keymap.set("n", "<leader><Tab>", "<nop>", { desc = "Buffers" })
-
--- Switch to next buffer
-keymap.set("n", "<leader><Tab><Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
-
--- Switch to previous buffer
-keymap.set("n", "<leader><Tab>p", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous Buffer" })
-
--- Go to buffer in position...
-keymap.set("n", "<leader><Tab>1", "<cmd>BufferLineGoToBuffer 1<cr>", { desc = "Buffer 1" })
-keymap.set("n", "<leader><Tab>2", "<cmd>BufferLineGoToBuffer 2<cr>", { desc = "Buffer 2" })
-keymap.set("n", "<leader><Tab>3", "<cmd>BufferLineGoToBuffer 3<cr>", { desc = "Buffer 3" })
-keymap.set("n", "<leader><Tab>4", "<cmd>BufferLineGoToBuffer 4<cr>", { desc = "Buffer 4" })
-keymap.set("n", "<leader><Tab>5", "<cmd>BufferLineGoToBuffer 5<cr>", { desc = "Buffer 5" })
-keymap.set("n", "<leader><Tab>6", "<cmd>BufferLineGoToBuffer 6<cr>", { desc = "Buffer 6" })
-keymap.set("n", "<leader><Tab>7", "<cmd>BufferLineGoToBuffer 7<cr>", { desc = "Buffer 7" })
-keymap.set("n", "<leader><Tab>8", "<cmd>BufferLineGoToBuffer 8<cr>", { desc = "Buffer 8" })
-keymap.set("n", "<leader><Tab>9", "<cmd>BufferLineGoToBuffer 9<cr>", { desc = "Buffer 9" })
-keymap.set("n", "<leader><Tab>$", "<cmd>BufferLineGoToBuffer -1<cr>", { desc = "Last Buffer" })
-
--- Move buffer to position
-keymap.set("n", "<leader><Tab>m", "<nop>", { desc = "Move Buffer" })
-keymap.set("n", "<leader><Tab>m1", "<cmd>BufferLineMoveTo 1<cr>", { desc = "Move to Position 1" })
-keymap.set("n", "<leader><Tab>m2", "<cmd>BufferLineMoveTo 2<cr>", { desc = "Move to Position 2" })
-keymap.set("n", "<leader><Tab>m3", "<cmd>BufferLineMoveTo 3<cr>", { desc = "Move to Position 3" })
-keymap.set("n", "<leader><Tab>m4", "<cmd>BufferLineMoveTo 4<cr>", { desc = "Move to Position 4" })
-keymap.set("n", "<leader><Tab>m5", "<cmd>BufferLineMoveTo 5<cr>", { desc = "Move to Position 5" })
-
--- Custom function to change buffer
-local function change_buffer()
-	local buffer_number = tonumber(vim.fn.input("Buffer number: "))
-	if buffer_number then
-		vim.cmd('BufferLineGoToBuffer ' .. buffer_number)
-	end
-end
-
-keymap.set("n", "<leader><Tab>g", change_buffer, { desc = "Go to Buffer" })
-
-
-
-
-	
--- Improved function to save all modified buffers
-local function save_all_modified_buffers()
-    local saved_count = 0
-    for i = 1, vim.fn.bufnr('$') do
-        if vim.api.nvim_buf_is_valid(i) and vim.bo[i].modified and vim.bo[i].buftype == '' then
-            local success, err = pcall(function()
-                vim.api.nvim_buf_call(i, function()
-                    vim.cmd('write')
-                end)
-            end)
-            if success then
-                saved_count = saved_count + 1
-            else
-                vim.notify("Failed to save buffer " .. i .. ": " .. err, vim.log.levels.ERROR)
-            end
-        end
-    end
-    vim.notify(saved_count .. " modified buffer(s) saved", vim.log.levels.INFO)
-end
-
--- Function to close selected buffer [1-9]
-local function close_selected_buffer(num)
-    local bufnr = vim.fn.bufnr(tostring(num))
-    if bufnr ~= -1 then
-        vim.api.nvim_buf_delete(bufnr, { force = false })
-        vim.notify("Closed buffer " .. num, vim.log.levels.INFO)
-    else
-        vim.notify("Buffer " .. num .. " not found", vim.log.levels.WARN)
-    end
-end
-
--- Function to close current buffer
-local function close_current_buffer()
-    local current_buf = vim.api.nvim_get_current_buf()
-    local next_buf = vim.fn.bufnr('#')
-    
-    if next_buf ~= -1 and vim.api.nvim_buf_is_valid(next_buf) then
-        vim.api.nvim_set_current_buf(next_buf)
-    else
-        vim.cmd('Alpha')
-    end
-    
-    vim.api.nvim_buf_delete(current_buf, { force = false })
-    vim.notify("Closed current buffer", vim.log.levels.INFO)
-end
-
--- Keymaps
-keymap.set("n", "<leader><Tab>w", save_all_modified_buffers, { desc = "Save all modified buffers" })
-
-for i = 1, 9 do
-    keymap.set("n", "<leader><Tab>x" .. i, function() close_selected_buffer(i) end, { desc = "Close buffer " .. i })
-end
-
-keymap.set("n", "<leader><Tab>Q", "<cmd>BufferLineCloseOthers<cr>", { desc = "Close all buffers except current" })
-keymap.set("n", "<leader><Tab>q", close_current_buffer, { desc = "Close current buffer" })
-
--- Remap :q to close current buffer
-vim.api.nvim_create_user_command('Q', function()
-    close_current_buffer()
-end, {})
-
--- Optional: completely override :q (use with caution)
--- vim.cmd('cabbrev q Q')
+-- vim: ts=2 sts=2 sw=2 et
