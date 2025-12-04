@@ -38,6 +38,7 @@ vim.o.signcolumn = 'yes'
 vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
+-- This affects how long Neovim waits for key sequences
 vim.o.timeoutlen = 300
 
 -- Configure how new splits should be opened

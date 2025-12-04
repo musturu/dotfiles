@@ -2,7 +2,7 @@ return {
   { -- Autocompletion
     'saghen/blink.cmp',
     event = 'VimEnter',
-    version = '1.*',
+    version = '*',
     dependencies = {
       -- Snippet Engine
       {
@@ -19,67 +19,150 @@ return {
         end)(),
         dependencies = {
           -- `friendly-snippets` contains a variety of premade snippets.
-          --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
       'folke/lazydev.nvim',
+      'onsails/lspkind.nvim',
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
-      keymap = {
-        -- 'default' (recommended) for mappings similar to built-in completions
-        --   <c-y> to accept ([y]es) the completion.
-        --    This will auto-import if your LSP supports it.
-        --    This will expand snippets if the LSP sent a snippet.
-        -- 'super-tab' for tab to accept
-        -- 'enter' for enter to accept
-        -- 'none' for no mappings
-        --
-        -- For an understanding of why the 'default' preset is recommended,
-        -- you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
-        --
-        -- All presets have the following mappings:
-        -- <tab>/<s-tab>: move to right/left of your snippet expansion
-        -- <c-space>: Open menu or open docs if already open
-        -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
-        -- <c-e>: Hide menu
-        -- <c-k>: Toggle signature help
-        --
-        -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
-
-        -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-        --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
-      },
-
       appearance = {
-        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
+        use_nvim_cmp_as_default = false,
         nerd_font_variant = 'mono',
       },
 
       completion = {
-        -- By default, you may press `<c-space>` to show the documentation.
-        -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        accept = { auto_brackets = { enabled = true } },
+
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 250,
+          treesitter_highlighting = true,
+          window = { border = 'rounded' },
+        },
+
+        list = {
+          selection = {
+            preselect = function(ctx)
+              return ctx.mode ~= 'cmdline'
+            end,
+            auto_insert = function(ctx)
+              return ctx.mode == 'cmdline'
+            end,
+          },
+        },
+
+        menu = {
+          border = 'rounded',
+
+          cmdline_position = function()
+            if vim.g.ui_cmdline_pos ~= nil then
+              local pos = vim.g.ui_cmdline_pos -- (1, 0)-indexed
+              return { pos[1] - 1, pos[2] }
+            end
+            local height = (vim.o.cmdheight == 0) and 1 or vim.o.cmdheight
+            return { vim.o.lines - height, 0 }
+          end,
+
+          draw = {
+            columns = {
+              { 'kind_icon', 'label', gap = 1 },
+              { 'kind' },
+            },
+            components = {
+              kind_icon = {
+                text = function(item)
+                  local kind = require('lspkind').symbol_map[item.kind] or ''
+                  return kind .. ' '
+                end,
+                highlight = 'CmpItemKind',
+              },
+              label = {
+                text = function(item)
+                  return item.label
+                end,
+                highlight = 'CmpItemAbbr',
+              },
+              kind = {
+                text = function(item)
+                  return item.kind
+                end,
+                highlight = 'CmpItemKind',
+              },
+            },
+          },
+        },
+      },
+
+      -- Custom keymap: TAB cycles, ENTER accepts only when menu visible
+      keymap = {
+        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+        ['<C-e>'] = { 'hide', 'fallback' },
+        ['<CR>'] = { 'accept', 'fallback' },
+
+        ['<Tab>'] = {
+          function(cmp)
+            return cmp.select_next()
+          end,
+          'snippet_forward',
+          'fallback',
+        },
+        ['<S-Tab>'] = {
+          function(cmp)
+            return cmp.select_prev()
+          end,
+          'snippet_backward',
+          'fallback',
+        },
+
+        ['<Up>'] = { 'select_prev', 'fallback' },
+        ['<Down>'] = { 'select_next', 'fallback' },
+        ['<C-p>'] = { 'select_prev', 'fallback' },
+        ['<C-n>'] = { 'select_next', 'fallback' },
+        ['<C-up>'] = { 'scroll_documentation_up', 'fallback' },
+        ['<C-down>'] = { 'scroll_documentation_down', 'fallback' },
+      },
+
+      -- Signature help window
+      signature = {
+        enabled = true,
+        window = { border = 'rounded' },
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          lsp = {
+            min_keyword_length = 1,
+            score_offset = 0,
+          },
+          path = {
+            min_keyword_length = 0,
+          },
+          snippets = {
+            min_keyword_length = 2,
+            score_offset = -3, -- Lower priority than LSP
+          },
+          buffer = {
+            min_keyword_length = 3,
+            max_items = 5,
+            score_offset = -5, -- Lower priority than snippets and LSP
+          },
         },
+      },
+
+      -- Disable cmdline completion
+      cmdline = {
+        sources = {},
       },
 
       snippets = { preset = 'luasnip' },
@@ -91,10 +174,11 @@ return {
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
-
-      -- Shows a signature help window while you type arguments for a function
-      signature = { enabled = true },
+      fuzzy = {
+        implementation = 'lua',
+        -- Prioritize exact prefix matches
+        sorts = { 'exact', 'score', 'sort_text' },
+      },
     },
   },
 }
