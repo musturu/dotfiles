@@ -160,11 +160,6 @@ return {
         },
       },
 
-      -- Disable cmdline completion
-      cmdline = {
-        sources = {},
-      },
-
       snippets = { preset = 'luasnip' },
 
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
